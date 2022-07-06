@@ -90,23 +90,81 @@ const chao = {
                     planoDefundo.largura,planoDefundo.altura
             )
         } 
+
+    }
+
+    const telaInicio = {
+        sX: 134,
+        sy: 0,
+        w: 174,
+        h: 152,
+        x: (canvas.width/ 2) - 174 / 2,
+        y: 50,
+
+        desenhar() {
+            contexto.drawImage(
+                sprites,
+                telaInicio.sX, telaInicio.sy,
+                telaInicio.w, telaInicio.h,
+                telaInicio.x,telaInicio.y,
+                telaInicio.w,telaInicio.h,
+            )
+        },
     }
 
 
+let telaActive =  {}
+
+ function mudaDetela(novatela) {
+    telaActive = novatela
+}
 
 
 
+const tela = {
+    INICIO: {
+        desenhar(){
+            planoDefundo.desenhar();
+            chao.desenhar();
+            flappyBird.desenhar();
+            telaInicio.desenhar();
+        },
+        atualiza() {
+
+        }
+    }
+}
+
+tela.JOGO = {
+    desenhar() {
+        planoDefundo.desenhar()
+        chao.desenhar()
+        flappyBird.desenhar()
+    },
+
+    click() {
+        mudaDetela(INICIO.JOGO)
+    },
+
+    atualiza() {
+        flappyBird.atualizar()
+    }
+}
 
 
 function loop() {
-
-    flappyBird.atualizar()
+    telaActive.desenhar()
+    telaActive.atualiza()
     
-    planoDefundo.desenhar()
-    chao.desenhar()
-    flappyBird.desenhar()
-
     requestAnimationFrame(loop)
 }
 
+window.addEventListener('click', function() {
+    if(telaActive.click)  {
+        telaActive.click()
+    }
+})
+
+mudaDetela(tela.INICIO)
+    
 loop()
